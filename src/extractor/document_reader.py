@@ -26,6 +26,8 @@ def read_document(path: str) -> tuple[str, Optional[str]]:
         text = _read_pdf(path)
     elif suffix in (".docx", ".doc"):
         text = _read_docx(path)
+    elif suffix == ".txt":
+        text = pathlib.Path(path).read_text(encoding="utf-8")
     else:
         raise ValueError(f"Unsupported file type: {suffix}")
 

@@ -6,7 +6,7 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub")
 import argparse
 import pathlib
-import shutil
+import threading
 import time
 
 from src.staged_pipeline.pipeline import StagedPipelineExtractor
@@ -21,8 +21,7 @@ def main():
     parser.add_argument("--base-url", default="http://localhost:11434")
     parser.add_argument("--api-key", default=None)
     parser.add_argument("--output-dir", default="output")
-    parser.add_argument("--treated-dir", default="treated_docs")
-    parser.add_argument("--retries", type=int, default=3)
+    parser.add_argument("--retries", type=int, default=1)
     parser.add_argument("--timeout", type=int, default=600,
                         help="Per-request timeout in seconds (default 600)")
     parser.add_argument("--no-gliner", action="store_true", help="Disable GLiNER NER stage")
@@ -34,19 +33,24 @@ def main():
                         help="Drop extracted fields below this confidence (suppresses guesses)")
     args = parser.parse_args()
 
-    input_path = pathlib.Path(args.input_dir)
-    treated_path = pathlib.Path(args.treated_dir)
-    treated_path.mkdir(exist_ok=True)
+    # Heartbeat: print a tick every 10s so we can see Python is alive
+    _stop_heartbeat = threading.Event()
+    def _heartbeat():
+        t0 = time.time()
+        while not _stop_heartbeat.wait(10):
+            print(f"  [heartbeat] still running ... ({int(time.time()-t0)}s elapsed)", flush=True)
+    threading.Thread(target=_heartbeat, daemon=True).start()
 
-    already_processed = {f.name for f in treated_path.iterdir()} if treated_path.exists() else set()
+    print("[Staged] Initialising extractor ...", flush=True)
+    input_path = pathlib.Path(args.input_dir)
 
     files = [
         f for f in input_path.iterdir()
-        if f.suffix.lower() in (".pdf", ".docx", ".doc") and f.name not in already_processed
+        if f.suffix.lower() in (".pdf", ".docx", ".doc", ".txt")
     ]
 
     if not files:
-        print("No new files to process.")
+        print("No files found in input directory.")
         return
 
     extractor = StagedPipelineExtractor(
@@ -73,15 +77,14 @@ def main():
             tokens_est = extractor.last_prompt_chars // 4
             print(f"OK ({elapsed:.1f}s, ~{tokens_est} tokens)")
             extractions.append(extraction)
-            shutil.copy2(f, treated_path / f.name)
+            paths = save_extractions(extractions, strategy="staged", output_root=args.output_dir)
+            print(f"  -> Saved {len(extractions)} doc(s) so far: {paths['json']}")
         except Exception as e:
             print(f"FAILED: {e}")
 
+    _stop_heartbeat.set()
     if extractions:
-        paths = save_extractions(extractions, strategy="staged", output_root=args.output_dir)
-        print(f"\nSaved {len(extractions)} extraction(s):")
-        print(f"  JSON : {paths['json']}")
-        print(f"  Excel: {paths['xlsx']}")
+        print(f"\nDone. {len(extractions)}/{len(files)} doc(s) extracted.")
     else:
         print("No successful extractions.")
 

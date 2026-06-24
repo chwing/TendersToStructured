@@ -11,12 +11,6 @@ try:
 except ImportError:
     _BM25_AVAILABLE = False
 
-try:
-    from sentence_transformers import SentenceTransformer
-    _ST_AVAILABLE = True
-except ImportError:
-    _ST_AVAILABLE = False
-
 from src.staged_pipeline.chunker import Chunk
 from src.staged_pipeline.field_queries import FIELD_QUERIES
 from src.extractor.fields import ALL_FIELDS
@@ -47,7 +41,15 @@ class HybridRetriever:
             self._bm25 = BM25Okapi(tokenized)
             _log(f"BM25 index ready ({time.time()-t0:.1f}s)")
 
-        if self.use_embeddings and _ST_AVAILABLE and self.chunks:
+        if self.use_embeddings and self.chunks:
+            try:
+                from sentence_transformers import SentenceTransformer
+                _ST_AVAILABLE = True
+            except ImportError:
+                _ST_AVAILABLE = False
+            if not _ST_AVAILABLE:
+                _log("sentence-transformers not installed — using BM25 only")
+                return
             _log(f"Loading embedding model '{_EMBED_MODEL_NAME}' (first run downloads ~1.5 GB — please wait) ...")
             t1 = time.time()
             self._embed_model = SentenceTransformer(_EMBED_MODEL_NAME)
@@ -61,8 +63,6 @@ class HybridRetriever:
                 batch_size=16,
             )
             _log(f"Embeddings ready ({time.time()-t2:.1f}s)")
-        elif not _ST_AVAILABLE:
-            _log("sentence-transformers not installed — using BM25 only")
         elif not self.use_embeddings:
             _log("Embeddings disabled (--no-embeddings) — using BM25 only")
 

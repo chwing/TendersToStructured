@@ -4,8 +4,6 @@ import pathlib
 from datetime import date
 from typing import Any
 
-import pandas as pd
-
 from src.extractor.fields import ALL_FIELDS
 from src.extractor.models import TenderExtraction
 
@@ -43,6 +41,7 @@ def save_extractions(
     json_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # Excel
+    import pandas as pd
     rows = [_field_to_row(e) for e in extractions]
     df = pd.DataFrame(rows)
     df.to_excel(str(xlsx_path), index=False)

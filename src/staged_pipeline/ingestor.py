@@ -1,12 +1,5 @@
-import sys
+import pathlib
 from dataclasses import dataclass, field
-from typing import Optional
-
-try:
-    from docling.document_converter import DocumentConverter as DoclingConverter
-    _DOCLING_AVAILABLE = True
-except ImportError:
-    _DOCLING_AVAILABLE = False
 
 try:
     import pdfplumber
@@ -39,34 +32,14 @@ def ingest(path: str) -> IngestedDocument:
         return _ingest_pdf(path)
     elif suffix.endswith(".docx") or suffix.endswith(".doc"):
         return _ingest_docx(path)
+    elif suffix.endswith(".txt"):
+        return _ingest_txt(path)
     else:
         raise ValueError(f"Unsupported file type: {path}")
 
 
 def _ingest_pdf(path: str) -> IngestedDocument:
-    if _DOCLING_AVAILABLE:
-        _log("Trying Docling parser (downloads models on first run — may take a few minutes) ...")
-        try:
-            result = _try_docling(path)
-            if result and result.text.strip():
-                _log(f"Docling OK — {len(result.text)} chars extracted")
-                return result
-            _log("Docling returned empty content, falling back to pdfplumber")
-        except Exception as e:
-            _log(f"Docling failed ({e}), falling back to pdfplumber")
     return _ingest_pdf_pdfplumber(path)
-
-
-def _try_docling(path: str) -> Optional[IngestedDocument]:
-    _log("Initialising Docling converter ...")
-    converter = DoclingConverter()
-    _log(f"Converting {path} ...")
-    result = converter.convert(path)
-    _log("Export to markdown ...")
-    md_text = result.document.export_to_markdown()
-    if not md_text or not md_text.strip():
-        return None
-    return IngestedDocument(text=md_text, pages=[], tables=[], parser="docling")
 
 
 def _ingest_pdf_pdfplumber(path: str) -> IngestedDocument:
@@ -85,6 +58,12 @@ def _ingest_pdf_pdfplumber(path: str) -> IngestedDocument:
     full_text = "\n\n".join(pages)
     _log(f"pdfplumber OK — {len(pages)} pages, {len(full_text)} chars")
     return IngestedDocument(text=full_text, pages=pages, tables=[], parser="pdfplumber")
+
+
+def _ingest_txt(path: str) -> IngestedDocument:
+    text = pathlib.Path(path).read_text(encoding="utf-8")
+    _log(f"txt OK — {len(text)} chars")
+    return IngestedDocument(text=text, pages=[text], tables=[], parser="txt")
 
 
 def _ingest_docx(path: str) -> IngestedDocument:

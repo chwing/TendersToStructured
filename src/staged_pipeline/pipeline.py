@@ -7,11 +7,12 @@ from src.staged_pipeline.chunker import chunk_document
 from src.staged_pipeline.retriever import HybridRetriever, build_curated_context, _SHORT_DOC_THRESHOLD
 from src.staged_pipeline.llm_finalizer import LLMFinalizer
 
-try:
-    from src.staged_pipeline.gliner_extractor import GlinerExtractor
-    _GLINER_OK = True
-except ImportError:
-    _GLINER_OK = False
+def _try_import_gliner():
+    try:
+        from src.staged_pipeline.gliner_extractor import GlinerExtractor
+        return GlinerExtractor
+    except (ImportError, Exception):
+        return None
 
 
 def _log(msg: str):
@@ -33,9 +34,9 @@ class StagedPipelineExtractor:
         num_ctx: int = 32768,
         min_confidence: float = 0.6,
     ):
-        self.use_gliner = use_gliner and _GLINER_OK
         self.use_embeddings = use_embeddings
         self.top_k = top_k
+        self.max_chars = 24_000  # hard cap before sending to LLM (~6k tokens)
 
         self._finalizer = LLMFinalizer(
             provider=provider,
@@ -47,13 +48,18 @@ class StagedPipelineExtractor:
             num_ctx=num_ctx,
             min_confidence=min_confidence,
         )
-        self._gliner: Optional[GlinerExtractor] = None
-        if self.use_gliner:
-            try:
-                from src.staged_pipeline.gliner_extractor import GlinerExtractor
-                self._gliner = GlinerExtractor()
-            except Exception:
-                self._gliner = None
+        self._gliner = None
+        if use_gliner:
+            _log("Loading GLiNER model ...")
+            GlinerExtractor = _try_import_gliner()
+            if GlinerExtractor:
+                try:
+                    self._gliner = GlinerExtractor()
+                    _log("GLiNER ready.")
+                except Exception as e:
+                    _log(f"GLiNER init failed ({e}) — skipping.")
+            else:
+                _log("GLiNER not available — skipping.")
 
     @property
     def last_prompt_chars(self) -> int:
@@ -104,6 +110,10 @@ class StagedPipelineExtractor:
                 ner_hints = ""
         else:
             ner_hints = ""
+
+        if len(curated) > self.max_chars:
+            _log(f"Context too large ({len(curated)} chars) — truncating to {self.max_chars} chars")
+            curated = curated[:self.max_chars]
 
         _log("Stage 6 — LLM finalization (sending to model ...)")
         t0 = time.time()

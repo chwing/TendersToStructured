@@ -1,0 +1,227 @@
+[
+  {
+    "source_file": "translated_docs\\AMI-_AMOA_TRANSVERSE08.062022.txt",
+    "document_language": "en",
+    "tender_id": null,
+    "title": {
+      "value": "Mission d'Assistance à la Maîtrise d'Ouvrage (AMOA) pour l'implémentation des projets du Programme de Transformation Digitale des Services Publics Orientés Citoyens « GovTech »",
+      "confidence": 0.9
+    },
+    "reference_number": null,
+    "issuing_organization": {
+      "value": "Ministère des Technologies de la Communication",
+      "confidence": 0.9
+    },
+    "department": null,
+    "country": {
+      "value": "Tunisie",
+      "confidence": 0.9
+    },
+    "city_region": {
+      "value": "Tunis",
+      "confidence": 0.9
+    },
+    "publication_date": {
+      "value": "2022-06-17",
+      "confidence": 0.65
+    },
+    "submission_deadline": {
+      "value": "2022-07-08",
+      "confidence": 0.9
+    },
+    "questions_deadline": null,
+    "award_date": null,
+    "budget": null,
+    "currency": null,
+    "payment_terms": null,
+    "financial_guarantee": null,
+    "project_description": {
+      "value": "Assistance à la Maîtrise d'Ouvrage (AMOA) pour l'implémentation des projets du Programme de Transformation Digitale des Services Publics Orientés Citoyens « GovTech »",
+      "confidence": 0.9
+    },
+    "domain": {
+      "value": "digital identity",
+      "confidence": 0.65
+    },
+    "required_technologies": null,
+    "deliverables": null,
+    "scope_of_work": {
+      "value": "• Framework, study and specification of needs\n• Development of specifications according to the model requirements of the World Bank\n• Follow-up of project implementation\n• Assistance in validating deliverables and receiving solutions\n• Definition of organizational and operational framework of implemented solutions\n• Technical assistance for capacity building of the UFP",
+      "confidence": 0.9
+    },
+    "hosting_requirements": null,
+    "num_profiles": null,
+    "roles_profiles": null,
+    "seniority_level": null,
+    "certifications": null,
+    "mission_duration": {
+      "value": "24 months",
+      "confidence": 0.9
+    },
+    "required_experience": null,
+    "company_size": null,
+    "required_documents": {
+      "value": "• Brochures\n• References concerning the performance of similar contracts\n• Experience under similar conditions\n• Availability of the necessary knowledge among staff",
+      "confidence": 0.9
+    },
+    "geographic_restrictions": null,
+    "legal_requirements": null,
+    "evaluation_criteria": {
+      "value": "Criteria Weight Rating scale Company strength 30\n1. Field of activity: The Consultant is responsible for 10\n2. Human means (staff and number of employees (05 pts): qualification) - Less than 15 : (1 pt)\n- Between >=15 and <50 : (3 pts)\n- More than or equal to 50 : (5 pts)\n(In the case of a grouping, the number of members of the Grouping will be accumulated)\n20 Executives (bicycle engineer + 5 or equivalent in computer or telecommunications) (15 pts): - Less than 15 : (05 pts)\n- Between 15 and 30 : (10 pts)\n- More than 30 : (15 pts)\n(In the case of a grouping, the number of members of the Grouping will be cumulative)\nReferences 70\n1. References Similar Missions 30\n2. Project management missions 20\n3. Design missions and system development references 20",
+      "confidence": 0.9
+    },
+    "lot_number": null,
+    "is_tech_relevant": {
+      "value": true,
+      "confidence": 0.9
+    },
+    "relevance_reason": {
+      "value": "The tender involves the implementation of digital transformation projects and requires technical expertise in information systems, IT consulting, and related fields.",
+      "confidence": 0.65
+    }
+  },
+  {
+    "source_file": "translated_docs\\AMI_AMOA_V_NO_14102021.txt",
+    "document_language": "en",
+    "tender_id": {
+      "value": "21/P-BAD/2021",
+      "confidence": 0.9
+    },
+    "title": {
+      "value": "Mission d'appui aux suivi et à la qualité des projets de implementation du programme E-Gov du PNS 2020",
+      "confidence": 0.65
+    },
+    "reference_number": null,
+    "issuing_organization": {
+      "value": "Ministry of Communication Technology (MTC)",
+      "confidence": 0.9
+    },
+    "department": null,
+    "country": {
+      "value": "Tunisia",
+      "confidence": 0.9
+    },
+    "city_region": null,
+    "publication_date": null,
+    "submission_deadline": {
+      "value": "2021-11-08",
+      "confidence": 0.9
+    },
+    "questions_deadline": null,
+    "award_date": null,
+    "budget": null,
+    "currency": null,
+    "payment_terms": null,
+    "financial_guarantee": null,
+    "project_description": {
+      "value": "Support the implementation of the National Strategic Plan \"Tunisia Digitale 2020\" and support the monitoring and quality of projects to implement the E-Gov programme of the PNS 2020",
+      "confidence": 0.9
+    },
+    "domain": {
+      "value": "e-government",
+      "confidence": 0.9
+    },
+    "required_technologies": null,
+    "deliverables": null,
+    "scope_of_work": {
+      "value": "- Setting needs\n- Design and specifications\n- Assistance during implementation\n- Recipe and commissioning\n- Transfer of skills\n- Quality control\n- Scheduling, piloting and coordination\n- Knowledge management and capacity building in project management",
+      "confidence": 0.9
+    },
+    "hosting_requirements": null,
+    "num_profiles": null,
+    "roles_profiles": null,
+    "seniority_level": null,
+    "certifications": null,
+    "mission_duration": null,
+    "required_experience": null,
+    "company_size": null,
+    "required_documents": {
+      "value": "- A letter of intention\n- A presentation of the company\n- Legal documents for creation and registration\n- Financial statements for the last 3 years\n- Certifications and performance proof",
+      "confidence": 0.9
+    },
+    "geographic_restrictions": null,
+    "legal_requirements": null,
+    "evaluation_criteria": null,
+    "lot_number": null,
+    "is_tech_relevant": {
+      "value": true,
+      "confidence": 0.9
+    },
+    "relevance_reason": {
+      "value": "The project involves e-government services and requires technical expertise.",
+      "confidence": 0.65
+    }
+  },
+  {
+    "source_file": "translated_docs\\TDRs-_AMOA_TRANSVERSE_-08-06-2022.txt",
+    "document_language": "en",
+    "tender_id": null,
+    "title": {
+      "value": "Mission of Assistance to the Master's degree 'AMOA' for the implementation of the projects of the Digital Transformation for Citizen-Oriented Public Services programme 'GovTech'",
+      "confidence": 0.9
+    },
+    "reference_number": null,
+    "issuing_organization": {
+      "value": "Ministry of Communication Technology",
+      "confidence": 0.9
+    },
+    "department": null,
+    "country": {
+      "value": "Tunisia",
+      "confidence": 0.9
+    },
+    "city_region": null,
+    "publication_date": {
+      "value": "2022-06",
+      "confidence": 0.65
+    },
+    "submission_deadline": null,
+    "questions_deadline": null,
+    "award_date": null,
+    "budget": null,
+    "currency": null,
+    "payment_terms": null,
+    "financial_guarantee": null,
+    "project_description": {
+      "value": "The mission involves providing support services for the implementation of the GovTech programme aimed at digital transformation for citizen-oriented public services in Tunisia.",
+      "confidence": 0.9
+    },
+    "domain": {
+      "value": "e-government",
+      "confidence": 0.9
+    },
+    "required_technologies": null,
+    "deliverables": {
+      "value": "Mission 1: Framework, study and specification of needs; Mission 2: Development of specifications / TDRs according to the requirements of the World Bank; Mission 3: Monitoring of project implementation; Mission 4: Assistance in validating deliverables and receiving solutions; Mission 5: Definition and implementation of the organizational and operational framework for implementation solutions; Mission 6: Technical assistance to strengthen the capacity of the PFU",
+      "confidence": 0.9
+    },
+    "scope_of_work": null,
+    "hosting_requirements": null,
+    "num_profiles": null,
+    "roles_profiles": {
+      "value": "One Head of Mission; A central BMP; An AMOA Social sector; An AMOA Administrative reform sector; An AMOA for monitoring other sectors; An SI Architecture Expert",
+      "confidence": 0.9
+    },
+    "seniority_level": null,
+    "certifications": null,
+    "mission_duration": {
+      "value": "24 months",
+      "confidence": 0.9
+    },
+    "required_experience": null,
+    "company_size": null,
+    "required_documents": null,
+    "geographic_restrictions": null,
+    "legal_requirements": null,
+    "evaluation_criteria": null,
+    "lot_number": null,
+    "is_tech_relevant": {
+      "value": true,
+      "confidence": 0.9
+    },
+    "relevance_reason": {
+      "value": "The mission involves providing support services for the implementation of digital transformation projects in Tunisia's public sector.",
+      "confidence": 0.9
+    }
+  }
+]

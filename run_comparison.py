@@ -18,7 +18,6 @@ from datetime import date
 from typing import Any, Optional
 
 import numpy as np
-import pandas as pd
 
 from src.extractor.fields import ALL_FIELDS
 from src.extractor.models import TenderExtraction, ExtractedField
@@ -193,7 +192,8 @@ def compute_doc_metrics(
 
 # ── Report builders ───────────────────────────────────────────────────────────
 
-def build_summary_df(doc_metrics: list[dict]) -> pd.DataFrame:
+def build_summary_df(doc_metrics: list[dict]):
+    import pandas as pd
     cols = [
         "file", "fill_rate_llm", "fill_rate_staged",
         "field_match_rate", "substantive_match_rate", "avg_semantic_similarity",
@@ -201,7 +201,8 @@ def build_summary_df(doc_metrics: list[dict]) -> pd.DataFrame:
     return pd.DataFrame([{c: m[c] for c in cols} for m in doc_metrics])
 
 
-def build_fields_df(doc_metrics: list[dict]) -> pd.DataFrame:
+def build_fields_df(doc_metrics: list[dict]):
+    import pandas as pd
     rows = []
     for m in doc_metrics:
         for field, s in m["field_statuses"].items():
@@ -216,7 +217,8 @@ def build_fields_df(doc_metrics: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def build_field_aggregate_df(fields_df: pd.DataFrame) -> pd.DataFrame:
+def build_field_aggregate_df(fields_df):
+    import pandas as pd
     rows = []
     for field in ALL_FIELDS:
         sub = fields_df[fields_df["field"] == field]
@@ -251,6 +253,7 @@ def save_report(doc_metrics: list[dict], output_root: str = "output") -> dict[st
         report_data.append(entry)
     json_path.write_text(json.dumps(report_data, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    import pandas as pd
     summary_df = build_summary_df(doc_metrics)
     fields_df = build_fields_df(doc_metrics)
     agg_df = build_field_aggregate_df(fields_df)
