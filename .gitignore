@@ -1,5 +1,5 @@
 # IDE
-../.idea/
+.idea/
 .vscode/
 
 # Python
@@ -15,9 +15,10 @@ build/
 .eggs/
 
 # Project data — not for version control
-../tender_docs/
-translated_docs/
-output/
+tender_docs/
+**/output/
+**/translated_docs/
+**/treated_docs/
 
 # OS
 .DS_Store
