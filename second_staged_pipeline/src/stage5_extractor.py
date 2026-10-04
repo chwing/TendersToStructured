@@ -82,7 +82,7 @@ class ExtractionLLM:
     def __init__(
         self,
         provider: str = "ollama",
-        model: str = "qwen2.5:14b",
+        model: str = "qwen2.5:7b",
         base_url: str = "http://localhost:11434",
         api_key: Optional[str] = None,
         max_retries: int = 3,

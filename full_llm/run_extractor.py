@@ -38,8 +38,8 @@ def main():
     parser.add_argument("--retries", type=int, default=3)
     parser.add_argument("--timeout", type=int, default=600,
                         help="Per-request timeout in seconds (default 600)")
-    parser.add_argument("--num-ctx", type=int, default=32768,
-                        help="Ollama context window in tokens (default 32768)")
+    parser.add_argument("--num-ctx", type=int, default=8192,
+                        help="Ollama context window in tokens (default 8192)")
     parser.add_argument("--min-confidence", type=float, default=0.0,
                         help="Drop fields below this confidence (default: 0.0 = keep all)")
     args = parser.parse_args()

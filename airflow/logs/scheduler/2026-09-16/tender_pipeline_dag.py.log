@@ -1,0 +1,14 @@
+[2026-09-16T00:00:08.340+0000] {processor.py:161} INFO - Started process (PID=2282) to work on /opt/airflow/dags/tender_pipeline_dag.py
+[2026-09-16T00:00:08.341+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/tender_pipeline_dag.py for tasks to queue
+[2026-09-16T00:00:08.342+0000] {logging_mixin.py:188} INFO - [2026-09-16T00:00:08.342+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/tender_pipeline_dag.py
+[2026-09-16T00:00:08.361+0000] {processor.py:840} INFO - DAG(s) 'tender_scrape_and_extract' retrieved from /opt/airflow/dags/tender_pipeline_dag.py
+[2026-09-16T00:00:08.562+0000] {logging_mixin.py:188} INFO - [2026-09-16T00:00:08.562+0000] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-09-16T00:00:08.576+0000] {logging_mixin.py:188} INFO - [2026-09-16T00:00:08.576+0000] {dag.py:3947} INFO - Setting next_dagrun for tender_scrape_and_extract to 2026-09-16 00:00:00+00:00, run_after=2026-09-17 00:00:00+00:00
+[2026-09-16T00:00:08.595+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/tender_pipeline_dag.py took 0.259 seconds
+[2026-09-16T00:00:38.860+0000] {processor.py:161} INFO - Started process (PID=2287) to work on /opt/airflow/dags/tender_pipeline_dag.py
+[2026-09-16T00:00:38.861+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/tender_pipeline_dag.py for tasks to queue
+[2026-09-16T00:00:38.863+0000] {logging_mixin.py:188} INFO - [2026-09-16T00:00:38.863+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/tender_pipeline_dag.py
+[2026-09-16T00:00:38.930+0000] {processor.py:840} INFO - DAG(s) 'tender_scrape_and_extract' retrieved from /opt/airflow/dags/tender_pipeline_dag.py
+[2026-09-16T00:00:38.952+0000] {logging_mixin.py:188} INFO - [2026-09-16T00:00:38.952+0000] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-09-16T00:00:38.967+0000] {logging_mixin.py:188} INFO - [2026-09-16T00:00:38.967+0000] {dag.py:3947} INFO - Setting next_dagrun for tender_scrape_and_extract to 2026-09-16 00:00:00+00:00, run_after=2026-09-17 00:00:00+00:00
+[2026-09-16T00:00:38.986+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/tender_pipeline_dag.py took 0.130 seconds

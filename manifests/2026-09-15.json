@@ -1,0 +1,36 @@
+{
+  "scraped_at": "2026-09-15T18:18:49.397276+00:00",
+  "output_dir": "tender_docs_5",
+  "tenders": [
+    {
+      "source": "marchespublics",
+      "reference": "16/2026/DRSPSRO",
+      "detail_url": "https://www.marchespublics.gov.ma/?page=entreprise.EntrepriseDetailConsultation&refConsultation=1028350&orgAcronyme=q9t",
+      "documents": []
+    },
+    {
+      "source": "marchespublics",
+      "reference": "30/2026/ANDA",
+      "detail_url": "https://www.marchespublics.gov.ma/?page=entreprise.EntrepriseDetailConsultation&refConsultation=1039741&orgAcronyme=q1s",
+      "documents": []
+    },
+    {
+      "source": "marchespublics",
+      "reference": "AO12/2026/BP",
+      "detail_url": "https://www.marchespublics.gov.ma/?page=entreprise.EntrepriseDetailConsultation&refConsultation=1038656&orgAcronyme=m8x",
+      "documents": []
+    },
+    {
+      "source": "marchespublics",
+      "reference": "04/2026/AUT",
+      "detail_url": "https://www.marchespublics.gov.ma/?page=entreprise.EntrepriseDetailConsultation&refConsultation=1036465&orgAcronyme=j8k",
+      "documents": []
+    },
+    {
+      "source": "marchespublics",
+      "reference": "85/2026",
+      "detail_url": "https://www.marchespublics.gov.ma/?page=entreprise.EntrepriseDetailConsultation&refConsultation=1037230&orgAcronyme=g8e",
+      "documents": []
+    }
+  ]
+}

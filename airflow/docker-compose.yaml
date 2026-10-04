@@ -1,0 +1,78 @@
+# Minimal local Airflow (LocalExecutor) for the daily scrape + extract DAG.
+#
+# Setup:
+#   cd airflow
+#   docker compose build            # builds the tender-pipeline runtime image (see ../Dockerfile)
+#   docker compose up airflow-init  # one-off: db migrate + create the admin user
+#   docker compose up -d            # start webserver + scheduler
+#   open http://localhost:8080  (user: admin / pass: admin)
+#
+# The scrape/extract tasks run in *sibling* containers built from the
+# tender-pipeline image (via DockerOperator), not inside the Airflow
+# containers themselves — that keeps heavy ML deps (torch, transformers) out
+# of the Airflow image. This requires access to the host's Docker daemon,
+# hence the docker.sock mount below.
+#
+# Ollama is assumed to run on the host (as in the main README) and is reached
+# from containers via host.docker.internal — see dags/tender_pipeline_dag.py.
+
+x-airflow-common: &airflow-common
+  build:
+    context: .
+    dockerfile: Dockerfile.airflow
+  environment:
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DEFAULT_TIMEZONE: utc
+    TENDER_PIPELINE_IMAGE: tender-pipeline:latest
+    TENDER_PIPELINE_DATA_HOST_PATH: ${TENDER_PIPELINE_DATA_HOST_PATH:-./data}
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./data:/data
+    - /var/run/docker.sock:/var/run/docker.sock
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create \
+          --username admin --password admin \
+          --firstname Admin --lastname Admin \
+          --role Admin --email admin@example.com
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    restart: unless-stopped
+
+volumes:
+  postgres-db-volume:

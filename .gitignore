@@ -16,9 +16,13 @@ build/
 
 # Project data — not for version control
 tender_docs/
+tender_docs_5/
+tender_docs_tuneps_5/
+tender_docs_new/
 **/output/
 **/translated_docs/
 **/treated_docs/
+scraper/.scraper_state/
 
 # OS
 .DS_Store

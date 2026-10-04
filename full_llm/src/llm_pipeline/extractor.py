@@ -8,6 +8,15 @@ import requests
 from ..extractor import read_document, ALL_FIELDS, ExtractedField, TenderExtraction
 from .prompt import SYSTEM_PROMPT, make_user_prompt
 
+def _sanitize_text(text: str) -> str:
+    """Remove control characters and null bytes that cause Ollama 500 errors."""
+    # Strip C0/C1 control chars except tab (9), LF (10), CR (13)
+    text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f\x80-\x9f]", " ", text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
 _ABSENCE_PHRASES = {
     "non mentionné", "non mentionnée", "non spécifié", "non spécifiée",
     "non disponible", "introuvable", "not found", "not mentioned",
@@ -44,6 +53,19 @@ class LLMPipelineExtractor:
 
     def extract_file(self, file_path: str) -> TenderExtraction:
         text, language = read_document(file_path)
+        text = _sanitize_text(text)
+        # Truncate to fit safely in the model's context window.
+        # Rough rule: reserve ~2500 chars for system prompt + field list,
+        # and 4 chars ≈ 1 token, so max doc chars = (num_ctx - 2500) * 4.
+        max_doc_chars = max(4000, (self.num_ctx - 2500) * 4)
+        if len(text) > max_doc_chars:
+            text = text[:max_doc_chars]
+            print(
+                f"  WARNING: document truncated to {max_doc_chars} chars "
+                f"to fit context window (num_ctx={self.num_ctx}). "
+                f"Use Staged 2 pipeline for full coverage.",
+                flush=True,
+            )
         return self.extract_text(text, source_file=file_path, language=language)
 
     def extract_text(
@@ -108,16 +130,21 @@ class LLMPipelineExtractor:
             raise ValueError(f"Unknown provider: {self.provider}")
 
     def _call_ollama(self, system: str, user: str, temperature: float = 0.0) -> str:
+        # "format": "json" is only supported by some models (e.g. qwen2.5).
+        # Mistral and others return 500 with it — rely on prompt instructions instead.
+        _JSON_FORMAT_MODELS = {"qwen", "llama3", "phi3", "gemma"}
+        use_json_format = any(k in self.model.lower() for k in _JSON_FORMAT_MODELS)
         payload = {
             "model": self.model,
             "stream": False,
-            "format": "json",
             "options": {"temperature": temperature, "num_ctx": self.num_ctx},
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},
             ],
         }
+        if use_json_format:
+            payload["format"] = "json"
         resp = requests.post(
             f"{self.base_url}/api/chat",
             json=payload,

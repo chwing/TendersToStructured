@@ -5,6 +5,14 @@ Targets North African tenders (Tunisia, Morocco, Algeria)
 
 Outputs a structured JSON/Excel file with 36 fields per document — deadlines, budgets, evaluation criteria, required profiles, and more.
 
+An optional scraper (`scraper/`) can populate the input folder automatically
+by pulling new tenders straight from the Moroccan and Tunisian procurement
+portals — see [`scraper/README.md`](scraper/README.md).
+
+```
+scraper (scrape open tenders) → tender_docs_new/ → extraction pipeline (below) → structured JSON/Excel
+```
+
 ---
 
 ## Strategies
@@ -212,6 +220,15 @@ Each field is returned as `{"value": ..., "confidence": 0.40 | 0.65 | 0.90}`.
 
 ```
 tendersToStructured/
+│
+├── scraper/                          # Scrapes open tenders into tender_docs_new/
+│   ├── run_scraper.py
+│   └── src/
+│       ├── models.py                 # TenderListing
+│       ├── keywords.py               # keyword filter
+│       ├── dedup.py                  # seen-tenders index
+│       ├── downloader.py             # writes documents + metadata sidecars
+│       └── sources/                  # one scraper per portal (marchespublics, tuneps)
 │
 ├── full_llm/                        # Strategy 1 — Full LLM
 │   ├── run_extractor.py

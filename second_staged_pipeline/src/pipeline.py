@@ -3,7 +3,7 @@
 Stage 1: Document Processing   (PyMuPDF / pdfplumber / python-docx)
 Stage 2: Classical Extraction  (regex, rules, pattern detection)
 Stage 3: Transformer NLP       (XLM-RoBERTa NER + multilingual-e5 embeddings)
-Stage 4: Context Compression   (section ranking + semantic retrieval → ~95% token reduction)
+Stage 4: Context Compression   (section ranking + semantic retrieval -> ~95% token reduction)
 Stage 5: Extraction LLM        (Qwen2.5 — structured field extraction)
 Stage 6: LLM Judge             (Mistral/Llama — validation + self-correction loop)
 """
@@ -67,7 +67,7 @@ class PipelineResult:
         if self.context_result:
             lines.append(
                 f"Token reduction: {self.context_result.reduction_pct:.0f}% "
-                f"({self.context_result.total_chars_before} → {self.context_result.total_chars_after} chars)"
+                f"({self.context_result.total_chars_before} -> {self.context_result.total_chars_after} chars)"
             )
         return "\n".join(lines)
 
@@ -166,7 +166,7 @@ class HybridTenderPipeline:
         doc_len = len(doc.text)
         use_staged = doc_len >= self.staged_threshold
         _log(
-            f"Routing — doc length={doc_len} chars, threshold={self.staged_threshold} → "
+            f"Routing — doc length={doc_len} chars, threshold={self.staged_threshold} -> "
             f"{'STAGED (Stage 3+4)' if use_staged else 'LLM-only (Stage 3+4 skipped)'}"
         )
 

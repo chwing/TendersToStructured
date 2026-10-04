@@ -82,9 +82,12 @@ def process_document(path: str) -> ProcessedDocument:
     if suffix == ".pdf":
         pages = _extract_pdf(path)
         parser = "pymupdf" if _FITZ_AVAILABLE else "pdfplumber"
-    elif suffix in (".docx", ".doc"):
+    elif suffix == ".docx":
         pages = _extract_docx(path)
         parser = "python-docx"
+    elif suffix == ".doc":
+        pages = _extract_doc_legacy(path)
+        parser = "doc-legacy"
     elif suffix == ".txt":
         pages = _extract_txt(path)
         parser = "txt"
@@ -152,6 +155,7 @@ def _extract_pdf_pdfplumber(path: str) -> list[DocumentPage]:
 
 
 def _extract_docx(path: str) -> list[DocumentPage]:
+    """Read .docx (modern XML format) with python-docx."""
     if not _DOCX_AVAILABLE:
         raise ImportError("python-docx is not installed")
     _log("DOCX extractor: python-docx")
@@ -171,6 +175,70 @@ def _extract_docx(path: str) -> list[DocumentPage]:
 
     text = "\n\n".join(paragraphs)
     _log(f"python-docx OK — {len(paragraphs)} paragraphs, {len(headings)} headings")
+    return [DocumentPage(page_num=1, text=text)]
+
+
+def _extract_doc_legacy(path: str) -> list[DocumentPage]:
+    """Read old .doc binary format (Office 97-2003).
+
+    .doc is a proprietary binary — python-docx cannot open it.
+    Strategy:
+      1. LibreOffice headless conversion to .docx (reliable, free).
+      2. Raw binary string extraction (no dependencies, best-effort fallback).
+    """
+    import shutil
+    import subprocess
+    import tempfile
+
+    # ── Option 1: LibreOffice headless ────────────────────────────────────────
+    soffice = shutil.which("soffice") or shutil.which("libreoffice")
+    if soffice:
+        _log(f"DOC extractor: LibreOffice conversion ({soffice})")
+        try:
+            with tempfile.TemporaryDirectory() as tmpdir:
+                result = subprocess.run(
+                    [soffice, "--headless", "--convert-to", "docx",
+                     "--outdir", tmpdir, path],
+                    capture_output=True,
+                    timeout=60,
+                )
+                converted = list(pathlib.Path(tmpdir).glob("*.docx"))
+                if result.returncode == 0 and converted:
+                    _log(f"LibreOffice OK -> reading converted .docx")
+                    return _extract_docx(str(converted[0]))
+                else:
+                    _log(
+                        f"LibreOffice conversion failed (rc={result.returncode}), "
+                        f"falling back to binary extraction"
+                    )
+        except Exception as e:
+            _log(f"LibreOffice error: {e}, falling back to binary extraction")
+
+    # ── Option 2: Raw binary text extraction ──────────────────────────────────
+    # .doc stores text as UTF-16LE Unicode runs and ASCII strings in its binary
+    # body. Extracting printable runs recovers most of the readable content.
+    _log("DOC extractor: raw binary extraction (install LibreOffice for better results)")
+    with open(path, "rb") as f:
+        data = f.read()
+
+    # UTF-16LE runs: pairs (latin/extended char + 0x00), at least 5 pairs
+    unicode_runs = re.findall(rb"(?:[\x20-\x7e\xc0-\xff]\x00){5,}", data)
+    unicode_text = ""
+    if unicode_runs:
+        raw = b"".join(unicode_runs)
+        unicode_text = raw.decode("utf-16-le", errors="ignore")
+
+    # ASCII runs: printable bytes, at least 6 chars
+    ascii_runs = re.findall(rb"[\x20-\x7e\t]{6,}", data)
+    ascii_text = b"\n".join(ascii_runs).decode("ascii", errors="ignore")
+
+    # Prefer whichever extraction returned more content
+    text = unicode_text if len(unicode_text) >= len(ascii_text) * 0.8 else ascii_text
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    text = text.strip()
+
+    _log(f"Binary extraction: {len(text)} chars recovered")
     return [DocumentPage(page_num=1, text=text)]
 
 

@@ -142,7 +142,7 @@ def build_compressed_context(
     reduction = 1.0 - (total_chars_after / max(total_chars_before, 1))
 
     _log(
-        f"Context compressed: {total_chars_before} → {total_chars_after} chars "
+        f"Context compressed: {total_chars_before} -> {total_chars_after} chars "
         f"({reduction*100:.0f}% reduction)"
     )
 
